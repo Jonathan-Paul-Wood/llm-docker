@@ -46,17 +46,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-image.ps1 -O
 Replace `user@server` with your SSH destination:
 
 ```powershell
-ssh user@server 'mkdir -p ~/open-llm-docker'
-scp compose.yaml .env.example user@server:~/open-llm-docker/
-scp -r scripts user@server:~/open-llm-docker/
-scp qwen3-8b-image.tar user@server:~/open-llm-docker/
+ssh user@server 'mkdir -p ~/llm-docker'
+scp compose.yaml .env.example user@server:~/llm-docker/
+scp -r scripts user@server:~/llm-docker/
+scp qwen3-8b-image.tar user@server:~/llm-docker/
 ssh user@server
 ```
 
 On the remote Linux host:
 
 ```bash
-cd ~/open-llm-docker
+cd ~/llm-docker
 # Only needed if Docker Engine / Compose are not already installed:
 sudo bash scripts/install-docker.sh
 
@@ -74,7 +74,7 @@ The deploy script loads the image and starts Compose without building or pulling
 Copy the entire project folder to the server, including `Dockerfile` and `docker/entrypoint.sh`. Then:
 
 ```bash
-cd ~/open-llm-docker
+cd ~/llm-docker
 sudo bash scripts/install-docker.sh
 cp .env.example .env
 chmod 600 .env

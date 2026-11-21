@@ -58,8 +58,8 @@ ENV LD_LIBRARY_PATH=/opt/llama/bin \
     QWEN_PARALLEL=1
 USER 10001:10001
 RUN /opt/llama/bin/llama-server --version
-EXPOSE 8080
+EXPOSE 8082
 STOPSIGNAL SIGTERM
 HEALTHCHECK --interval=10s --timeout=5s --start-period=300s --retries=6 \
-    CMD curl --fail --silent --show-error http://127.0.0.1:8080/health || exit 1
+    CMD curl --fail --silent --show-error http://127.0.0.1:8082/health || exit 1
 ENTRYPOINT ["/usr/local/bin/qwen-entrypoint"]

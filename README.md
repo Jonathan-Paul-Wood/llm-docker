@@ -8,7 +8,7 @@ This packages the supplied systemd setup. Docker runs llama-server as the main p
 
 | Setting | Value |
 | --- | --- |
-| Host endpoint | `http://127.0.0.1:8080/v1` |
+| Host endpoint | `http://127.0.0.1:8082/v1` |
 | Model name | `qwen3-8b` |
 | CPU threads / prompt threads | 6 / 6 |
 | Context / simultaneous generation slots | 4096 tokens / 1 |
@@ -109,18 +109,18 @@ Copy `.env.example` to `.env` and adjust settings there. The deploy script creat
 sudo docker compose up -d --no-build --pull never --wait --wait-timeout 600
 ```
 
-The server listens on `0.0.0.0:8080` **inside** its container so port forwarding works. Compose publishes it on host loopback by default.
+The server listens on `0.0.0.0:8082` **inside** its container so port forwarding works. Compose publishes it on host loopback by default.
 
-- Applications on the host: base URL `http://127.0.0.1:8080/v1`, model `qwen3-8b`. Clients requiring a key field can use `local` when authentication is disabled.
-- Other Compose services on the same Docker network: `http://qwen:8080/v1`. For a separate Compose project, attach the calling service to the existing `open-llm_default` external network. No published host port is needed for this path.
-- A Linux container using host networking can use `http://127.0.0.1:8080/v1` directly.
-- Your local workstation can use an SSH tunnel: `ssh -N -L 8080:127.0.0.1:8080 user@server`.
+- Applications on the host: base URL `http://127.0.0.1:8082/v1`, model `qwen3-8b`. Clients requiring a key field can use `local` when authentication is disabled.
+- Other Compose services on the same Docker network: `http://qwen:8082/v1`. For a separate Compose project, attach the calling service to the existing `open-llm_default` external network. No published host port is needed for this path.
+- A Linux container using host networking can use `http://127.0.0.1:8082/v1` directly.
+- Your local workstation can use an SSH tunnel: `ssh -N -L 8082:127.0.0.1:8082 user@server`.
 - For LAN access, set `QWEN_BIND_IP` to the server's private IP, set `QWEN_API_KEY`, and restrict access at the network firewall. Use a TLS reverse proxy for access across untrusted networks. Docker port publishing has its own firewall rules; do not assume UFW alone restricts it.
 
 If authentication is enabled, send `Authorization: Bearer YOUR_KEY`. Keep `.env` private. For the smoke test, explicitly supply changes rather than sourcing `.env`:
 
 ```bash
-QWEN_BASE_URL=http://127.0.0.1:8080 QWEN_API_KEY='your-key' bash scripts/smoke-test.sh
+QWEN_BASE_URL=http://127.0.0.1:8082 QWEN_API_KEY='your-key' bash scripts/smoke-test.sh
 ```
 
 Requests need their own conversation history. The 4096-token context includes the prompt and generated output; increasing context or parallelism uses more memory. Allow generous CPU inference timeouts and queue requests in your application when necessary.
@@ -128,7 +128,7 @@ Requests need their own conversation history. The 4096-token context includes th
 ## Health, API test, and operation
 
 ```bash
-curl --fail --show-error http://127.0.0.1:8080/health
+curl --fail --show-error http://127.0.0.1:8082/health
 bash scripts/smoke-test.sh
 
 sudo docker compose ps

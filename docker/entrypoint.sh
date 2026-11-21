@@ -10,7 +10,7 @@ fi
 exec /opt/llama/bin/llama-server \
     --model "$model" \
     --alias qwen3-8b \
-    --host 0.0.0.0 --port 8080 \
+    --host 0.0.0.0 --port 8082 \
     --n-gpu-layers 0 \
     --threads "${QWEN_THREADS:-6}" \
     --threads-batch "${QWEN_THREADS_BATCH:-6}" \

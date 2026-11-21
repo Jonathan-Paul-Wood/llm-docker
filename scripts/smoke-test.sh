@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 # Set these explicitly when you changed .env; this script does not execute .env.
-base_url=${QWEN_BASE_URL:-http://127.0.0.1:8080}
+base_url=${QWEN_BASE_URL:-http://127.0.0.1:8082}
 base_url=${base_url%/}
 headers=(-H 'Content-Type: application/json')
 if [[ -n ${QWEN_API_KEY:-} ]]; then

@@ -146,6 +146,12 @@ Docker must start at boot. The installation script enables it with `systemctl en
 
 For troubleshooting, inspect `docker compose logs --tail 100 qwen`. Check for an occupied port, insufficient memory, or an image architecture mismatch. Initial model loading or CPU warmup can take time. A readiness timeout leaves the container available for diagnosis.
 
+### Interrupted model downloads during builds
+
+The downloader uses HTTP/1.1 and retries interrupted downloads up to ten times, resuming from the saved byte offset. A BuildKit cache mount retains partial files even if the build fails. Rerun `sudo bash scripts/deploy.sh --build` on the same Docker builder to resume. Keep the build cache; pruning it removes saved downloads. The final model must pass the pinned SHA-256 check before it enters the image.
+
+If upgrading from the original Dockerfile after `curl: (92) HTTP/2 stream ... CANCEL`, copy the updated `Dockerfile`, `.dockerignore`, and `docker/download-model.sh` to the server, then rerun the build. The original failed layer did not have a cache mount, so its partial download cannot be resumed by this version. Other successful build layers can still be reused.
+
 ## Versions and upstream references
 
 - llama.cpp source: `2d8a32502909ca065c41c4cf5f2fb1c427c047fc` (v1.0.0), recorded inside the image at `/opt/qwen/llama.cpp.commit`.

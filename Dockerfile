@@ -4,13 +4,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     && rm -rf /var/lib/apt/lists/*
 ARG MODEL_REVISION=7c41481f57cb95916b40956ab2f0b139b296d974
 ARG MODEL_SHA256=d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785
-RUN mkdir -p /models && \
-    curl --fail --location --retry 5 --retry-delay 5 \
-      --output /models/Qwen3-8B-Q4_K_M.gguf.part \
-      "https://huggingface.co/Qwen/Qwen3-8B-GGUF/resolve/${MODEL_REVISION}/Qwen3-8B-Q4_K_M.gguf" && \
-    echo "${MODEL_SHA256}  /models/Qwen3-8B-Q4_K_M.gguf.part" | sha256sum --check --strict && \
-    mv /models/Qwen3-8B-Q4_K_M.gguf.part /models/Qwen3-8B-Q4_K_M.gguf && \
-    curl --fail --location --retry 5 \
+COPY --chmod=755 docker/download-model.sh /usr/local/bin/download-model
+# A failed RUN layer is discarded; cache mounts retain partial downloads for retry.
+RUN --mount=type=cache,id=qwen3-model-v1,target=/var/cache/qwen,sharing=locked \
+    /usr/local/bin/download-model && \
+    curl --http1.1 --fail --location --retry 5 --retry-all-errors --connect-timeout 30 \
       --output /models/LICENSE \
       "https://huggingface.co/Qwen/Qwen3-8B-GGUF/resolve/${MODEL_REVISION}/LICENSE" && \
     chmod 0644 /models/*

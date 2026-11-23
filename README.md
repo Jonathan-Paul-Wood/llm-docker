@@ -14,8 +14,8 @@ This packages the supplied systemd setup. Docker runs llama-server as the main p
 | Context / simultaneous generation slots | 4096 tokens / 1 |
 | Thinking | Disabled |
 | Authentication | None; optional `QWEN_API_KEY` |
-| Memory ceiling | 22,000,000,000 bytes, with swap disabled |
-| Memory reservation | 18,000,000,000 bytes |
+| Memory ceiling | 22,000,000,000 bytes default, with swap disabled |
+| Memory reservation | 18,000,000,000 bytes default |
 | Restart policy | `unless-stopped` |
 
 The reservation is Docker's soft memory reservation, not systemd's `MemoryHigh` throttling control. The hard limit can cause an out-of-memory kill if exceeded. Docker will restart the process after a crash. An unhealthy status by itself does not trigger a Docker restart.

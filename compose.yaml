@@ -16,10 +16,10 @@ services:
       QWEN_CTX_SIZE: ${QWEN_CTX_SIZE:-4096}
       QWEN_PARALLEL: ${QWEN_PARALLEL:-1}
       LLAMA_API_KEY: ${QWEN_API_KEY:-}
-    mem_limit: 22000000000
-    mem_reservation: 18000000000
+    mem_limit: ${QWEN_MEM_LIMIT:-22000000000}
+    mem_reservation: ${QWEN_MEM_RESERVATION:-18000000000}
     # Equal memory and combined memory+swap limits disable container swap.
-    memswap_limit: 22000000000
+    memswap_limit: ${QWEN_MEMSWAP_LIMIT:-22000000000}
     read_only: true
     tmpfs:
       - /tmp:rw,noexec,nosuid,size=67108864,mode=1777
